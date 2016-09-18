@@ -5,23 +5,22 @@ import java.util.*;
 import java.net.*;  
   
 public class recieveServer {  
-    final int RECEIVE_PORT = 3333; // 该服务器的端口号  
+    final int RECEIVE_PORT = 3333;
   
-    // receiveServer的构造器  
     public recieveServer() {  
-        ServerSocket rServer = null; // ServerSocket的实例  
-        Socket request = null; // 用户请求的套接字  
+        ServerSocket rServer = null;
+        Socket request = null;
         Thread receiveThread = null;  
         try {  
-            rServer = new ServerSocket(RECEIVE_PORT); // 初始化ServerSocket  
+            rServer = new ServerSocket(RECEIVE_PORT);
             System.out.println("Welcome to the server!");  
             System.out.println(new Date());  
             System.out.println("The server is ready!");  
             System.out.println("Port: " + RECEIVE_PORT);  
-            while (true) { // 等待用户请求  
-                request = rServer.accept(); // 接收客户机连接请求  
-                receiveThread = new serverThread(request); // 生成serverThread的实例  
-                receiveThread.start();// 启动serverThread线程  
+            while (true) {
+                request = rServer.accept(); 
+                receiveThread = new serverThread(request); 
+                receiveThread.start(); 
             }  
         } catch (IOException e) {  
             System.out.println(e.getMessage());  
@@ -32,22 +31,21 @@ public class recieveServer {
         new recieveServer();  
     } // end of main  
   
-} // end of class  
+} 
   
-//类serverThread  
 class serverThread extends Thread {  
   
-    Socket clientRequest; // 用户连接的通信套接字  
-    BufferedReader input; // 输入流  
-    PrintWriter output; // 输出流  
+    Socket clientRequest;
+    BufferedReader input;
+    PrintWriter output; 
     String message = null;
     String remessage = null;
   
-    public serverThread(Socket s) { // serverThread的构造器  
-        this.clientRequest = s; // 接收receiveServer传来的套接字  
+    public serverThread(Socket s) { 
+        this.clientRequest = s;
         InputStreamReader reader;  
         OutputStreamWriter writer;  
-        try { // 初始化输入、输出流  
+        try {  
             reader = new InputStreamReader(clientRequest.getInputStream());  
             writer = new OutputStreamWriter(clientRequest.getOutputStream());  
             input = new BufferedReader(reader);  
@@ -57,15 +55,14 @@ class serverThread extends Thread {
         }  
         String message = null;
         String remessage = null;
-        // 这里循环可以使服务器持续的接收客户端信息。read.readLine()通过输入流读取一段字符串，赋值给message变量，如果message字符串不为“exit”则循环，否则结束循环
-
+        
         try {
 			message = input.readLine();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-            // 将字符串前面添加“返回：”，再发回客户端
+            
         	char[] charArray = message.toCharArray(); 
         	remessage = "";
             for (int i=charArray.length-1; i>=0; i--){ 
@@ -75,22 +72,22 @@ class serverThread extends Thread {
         
     }  
   
-    public void run() { // 线程的执行方法  
-        String command = null; // 用户指令  
+    public void run() { 
+        String command = null; 
         String str = null;  
         boolean done = false;  
         
   
         while (!done) {  
             try {  
-                str = input.readLine(); // 接收客户机指令  
+                str = input.readLine();
             } catch (IOException e) {  
                 System.out.println(e.getMessage());  
             }
             
             command = str.trim().toUpperCase();  
     		
-    		// 将字符串前面添加“返回：”，再发回客户端
+    		
     		char[] charArray = str.toCharArray(); 
     		remessage = "";
     		for (int i=charArray.length-1; i>=0; i--){ 
@@ -99,7 +96,7 @@ class serverThread extends Thread {
     		output.println(remessage);
         }// end of while 
         try {  
-            clientRequest.close(); // 关闭套接字  
+            clientRequest.close(); 
         } catch (IOException e) {  
             System.out.println(e.getMessage());  
         }  
